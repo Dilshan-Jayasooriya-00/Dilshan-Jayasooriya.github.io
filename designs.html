@@ -1,0 +1,370 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Design Portfolio | Dilshan Jayasooriya</title>
+    
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+
+    <style>
+        /* --- General Styles --- */
+        :root {
+            --bg-color: #f1f4f8;      
+            --text-color: #333333;
+            --primary-color: #0056b3;
+            --card-bg: #ffffff;
+            --shadow: 0 5px 20px rgba(0,0,0,0.08);
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            margin: 0; padding: 0;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            line-height: 1.6;
+        }
+
+        /* --- Navigation --- */
+        nav {
+            display: flex; justify-content: space-between; align-items: center; padding: 15px 5%;
+            background: #fff; box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+            position: sticky; top: 0; z-index: 1000;
+        }
+        .logo { font-size: 1.5rem; font-weight: 700; color: var(--primary-color); text-transform: uppercase; text-decoration: none;}
+        .logo span { color: var(--text-color); }
+        .back-btn { text-decoration: none; color: var(--text-color); font-weight: 600; display: flex; align-items: center; gap: 8px; transition: 0.3s; }
+        .back-btn:hover { color: var(--primary-color); }
+
+        /* --- Page Header --- */
+        .page-header {
+            text-align: center;
+            padding: 60px 20px 20px;
+        }
+        .page-header h1 { font-size: 2.5rem; margin-bottom: 10px; color: #1a252f; }
+        .page-header span { color: var(--primary-color); }
+        .page-header p { color: #666; max-width: 600px; margin: 0 auto; }
+
+        /* --- Grid Container --- */
+        .designs-container {
+            padding: 40px 5%;
+            max-width: 1400px; 
+            margin: 0 auto;
+        }
+
+        .grid-layout {
+            display: grid;
+            /* Auto-fill for responsiveness */
+            grid-template-columns: repeat(auto-fill, minmax(350px, 1fr)); 
+            gap: 30px;
+        }
+
+        /* --- Card Styles --- */
+        .card {
+            background: var(--card-bg); border-radius: 10px; overflow: hidden;
+            box-shadow: var(--shadow); transition: transform 0.3s ease, box-shadow 0.3s ease;
+            border: 1px solid #eee; cursor: pointer;
+        }
+        .card:hover { transform: translateY(-8px); box-shadow: 0 15px 30px rgba(0,0,0,0.1); }
+        .card-img { height: 250px; overflow: hidden; }
+        .card-img img { width: 100%; height: 100%; object-fit: cover; transition: 0.5s; }
+        .card:hover .card-img img { transform: scale(1.05); }
+        .card-content { padding: 20px; }
+        .card h3 { margin: 0 0 10px; font-size: 1.25rem; color: #2c3e50; }
+        .card p { font-size: 0.9rem; color: #666; }
+
+        /* --- Modal (Popup) Styles --- */
+        .modal {
+            display: none; position: fixed; z-index: 2000; left: 0; top: 0;
+            width: 100%; height: 100%; background-color: rgba(0,0,0,0.85);
+            backdrop-filter: blur(5px); overflow: auto;
+        }
+        .modal-content {
+            background-color: #fff; margin: 2% auto; width: 85%; max-width: 900px;
+            height: 90vh; border-radius: 10px; position: relative;
+            animation: zoomIn 0.3s; overflow: hidden; display: flex; flex-direction: column;
+        }
+        @keyframes zoomIn { from {transform: scale(0.8); opacity: 0;} to {transform: scale(1); opacity: 1;} }
+        
+        .close-btn {
+            position: absolute; top: 15px; right: 25px; color: #fff; font-size: 35px;
+            font-weight: bold; cursor: pointer; z-index: 100; text-shadow: 0 0 5px #000;
+        }
+        .close-btn:hover { color: var(--primary-color); }
+
+        /* Slider */
+        .slider-container {
+            position: relative; width: 100%; flex: 1; min-height: 300px;
+            background: #000; display: flex; align-items: center; justify-content: center; overflow: hidden;
+        }
+        .slide-img { width: 100%; height: 100%; object-fit: contain; display: none; }
+        .slide-img.active { display: block; animation: fade 0.5s; }
+        @keyframes fade { from {opacity: .4} to {opacity: 1} }
+
+        .prev, .next {
+            cursor: pointer; position: absolute; top: 50%; width: auto; padding: 16px;
+            margin-top: -22px; color: white; font-weight: bold; font-size: 25px;
+            transition: 0.6s ease; user-select: none; background-color: rgba(0,0,0,0.3); border-radius: 3px;
+        }
+        .next { right: 0; border-radius: 3px 0 0 3px; }
+        .prev { left: 0; border-radius: 0 3px 3px 0; }
+        .prev:hover, .next:hover { background-color: var(--primary-color); }
+
+        /* Description */
+        .modal-body { padding: 20px 25px; background: #fff; flex-shrink: 0; max-height: 40%; overflow-y: auto; }
+
+        footer { background: #1a252f; color: #fff; text-align: center; padding: 30px 0; margin-top: 50px; }
+        
+        /* Mobile Responsive */
+        @media (max-width: 768px) {
+            .grid-layout { grid-template-columns: 1fr; }
+            .page-header h1 { font-size: 2rem; }
+        }
+    </style>
+</head>
+<body>
+
+    <nav>
+        <a href="index.html" class="logo">My<span>Portfolio</span></a>
+        <a href="index.html" class="back-btn"><i class="fas fa-arrow-left"></i> Back to Home</a>
+    </nav>
+
+    <div class="page-header">
+        <h1>Design <span>Gallery</span></h1>
+        <p>A comprehensive collection of 30 engineering and 3D modeling projects.</p>
+    </div>
+
+    <section class="designs-container">
+        <div class="grid-layout">
+
+            <div class="card" onclick="openModal('design1')" data-aos="fade-up">
+                <div class="card-img"><img src="design1_1.jpg" alt="Bull Bar"></div>
+                <div class="card-content"><h3>Heavy-Duty Off-Road Bull Bar</h3><p>SolidWorks Sheet Metal Design.</p></div>
+            </div>
+            <div class="card" onclick="openModal('design2')" data-aos="fade-up">
+                <div class="card-img"><img src="design2_1.jpg" alt="Console"></div>
+                <div class="card-content"><h3>Automotive Center Console</h3><p>SolidWorks Power Surfacing.</p></div>
+            </div>
+            <div class="card" onclick="openModal('design3')" data-aos="fade-up">
+                <div class="card-img"><img src="design3_1.jpg" alt="Front Fascia"></div>
+                <div class="card-content"><h3>High-Performance Front Fascia</h3><p>Automotive Bumper Design.</p></div>
+            </div>
+            <div class="card" onclick="openModal('design4')" data-aos="fade-up">
+                <div class="card-img"><img src="design4_1.jpg" alt="Bajaj Fog Mount"></div>
+                <div class="card-content"><h3>Bajaj Fog Light Housing</h3><p>Aerodynamic Custom Fitment.</p></div>
+            </div>
+            <div class="card" onclick="openModal('design5')" data-aos="fade-up">
+                <div class="card-img"><img src="design5_1.jpg" alt="Bell Pepper Line"></div>
+                <div class="card-content"><h3>Bell Pepper Packing Line</h3><p>Agro-Industrial Automation.</p></div>
+            </div>
+            <div class="card" onclick="openModal('design6')" data-aos="fade-up">
+                <div class="card-img"><img src="design6_1.jpg" alt="Folding Machine"></div>
+                <div class="card-content"><h3>Auto T-Shirt Folding Machine</h3><p>Electro-Pneumatic Mechanism.</p></div>
+            </div>
+            <div class="card" onclick="openModal('design7')" data-aos="fade-up">
+                <div class="card-img"><img src="design7_1.jpg" alt="Robo Arena"></div>
+                <div class="card-content"><h3>Modular Combat Robotics Arena</h3><p>Structural Safety Design.</p></div>
+            </div>
+            <div class="card" onclick="openModal('design8')" data-aos="fade-up">
+                <div class="card-img"><img src="design8_1.jpg" alt="Winch Bumper"></div>
+                <div class="card-content"><h3>Rugged Off-Road Bumper</h3><p>Winch Integrated & Reinforced.</p></div>
+            </div>
+            <div class="card" onclick="openModal('design9')" data-aos="fade-up">
+                <div class="card-img"><img src="design9_1.jpg" alt="Tire Trimmer"></div>
+                <div class="card-content"><h3>Automated Tire Trimming System</h3><p>Post-Curing Finishing Machine.</p></div>
+            </div>
+            <div class="card" onclick="openModal('design10')" data-aos="fade-up">
+                <div class="card-img"><img src="design10_1.jpg" alt="Manual Forklift"></div>
+                <div class="card-content"><h3>Manual Material Handling Stacker</h3><p>Structural Design & Stability.</p></div>
+            </div>
+            <div class="card" onclick="openModal('design11')" data-aos="fade-up">
+                <div class="card-img"><img src="design11_1.jpg" alt="Phone Holder"></div>
+                <div class="card-content"><h3>Wall-Mounted Charging Dock</h3><p>3D Print Ready (DfAM).</p></div>
+            </div>
+            <div class="card" onclick="openModal('design12')" data-aos="fade-up">
+                <div class="card-img"><img src="design12_1.jpg" alt="Office Table"></div>
+                <div class="card-content"><h3>Industrial Sheet Metal Desk</h3><p>Modern Office Workstation.</p></div>
+            </div>
+            <div class="card" onclick="openModal('design13')" data-aos="fade-up">
+                <div class="card-img"><img src="design13_1.jpg" alt="Alloy Wheel"></div>
+                <div class="card-content"><h3>Performance Alloy Wheel</h3><p>Multi-Spoke Aerodynamic Design.</p></div>
+            </div>
+            <div class="card" onclick="openModal('design14')" data-aos="fade-up">
+                <div class="card-img"><img src="design14_1.jpg" alt="Headset Holder"></div>
+                <div class="card-content"><h3>Ergonomic Headset Stand</h3><p>Optimized for 3D Printing.</p></div>
+            </div>
+            <div class="card" onclick="openModal('design15')" data-aos="fade-up">
+                <div class="card-img"><img src="design15_1.jpg" alt="Staircase"></div>
+                <div class="card-content"><h3>Industrial Steel Staircase</h3><p>SolidWorks Weldments Design.</p></div>
+            </div>
+            <div class="card" onclick="openModal('design16')" data-aos="fade-up">
+                <div class="card-img"><img src="design16_1.jpg" alt="Piston"></div>
+                <div class="card-content"><h3>Engine Piston Assembly</h3><p>Reciprocating Dynamics.</p></div>
+            </div>
+            <div class="card" onclick="openModal('design17')" data-aos="fade-up">
+                <div class="card-img"><img src="design17_1.jpg" alt="Engine Block"></div>
+                <div class="card-content"><h3>V6 Engine Block & Drawings</h3><p>Technical Drafting & Casting.</p></div>
+            </div>
+            <div class="card" onclick="openModal('design18')" data-aos="fade-up">
+                <div class="card-img"><img src="design18_1.jpg" alt="Power Bank"></div>
+                <div class="card-content"><h3>Portable Power Bank</h3><p>Consumer Electronics Enclosure.</p></div>
+            </div>
+            <div class="card" onclick="openModal('design19')" data-aos="fade-up">
+                <div class="card-img"><img src="design19_1.jpg" alt="Connector Fixture"></div>
+                <div class="card-content"><h3>Wire Harness Testing Jig</h3><p>Industrial QA Tooling.</p></div>
+            </div>
+            <div class="card" onclick="openModal('design20')" data-aos="fade-up">
+                <div class="card-img"><img src="design20_1.jpg" alt="Car Bumper"></div>
+                <div class="card-content"><h3>Custom Body Kit Bumper</h3><p>Power Surfacing & Aerodynamics.</p></div>
+            </div>
+            <div class="card" onclick="openModal('design21')" data-aos="fade-up">
+                <div class="card-img"><img src="design21_1.jpg" alt="Concept Car"></div>
+                <div class="card-content"><h3>Futuristic Automotive Concept</h3><p>Conceptual Styling Study.</p></div>
+            </div>
+            <div class="card" onclick="openModal('design22')" data-aos="fade-up">
+                <div class="card-img"><img src="design22_1.jpg" alt="Bonnet"></div>
+                <div class="card-content"><h3>Performance Hood (Ram-Air)</h3><p>Class-A Surface Modeling.</p></div>
+            </div>
+            <div class="card" onclick="openModal('design23')" data-aos="fade-up">
+                <div class="card-img"><img src="design23_1.jpg" alt="Side Mirror"></div>
+                <div class="card-content"><h3>Aerodynamic Side Mirror</h3><p>Retro-Modern Styling.</p></div>
+            </div>
+            <div class="card" onclick="openModal('design24')" data-aos="fade-up">
+                <div class="card-img"><img src="design24_1.jpg" alt="Turbine Wheel"></div>
+                <div class="card-content"><h3>Directional Turbine Wheel</h3><p>Active Brake Cooling Design.</p></div>
+            </div>
+            <div class="card" onclick="openModal('design25')" data-aos="fade-up">
+                <div class="card-img"><img src="design25_1.jpg" alt="Smart Lock"></div>
+                <div class="card-content"><h3>IoT-Enabled Smart Lock</h3><p>Mechatronic System Integration.</p></div>
+            </div>
+            <div class="card" onclick="openModal('design26')" data-aos="fade-up">
+                <div class="card-img"><img src="design26_1.jpg" alt="Cupboard"></div>
+                <div class="card-content"><h3>Custom Timber Cabinetry</h3><p>Parametric Furniture Design.</p></div>
+            </div>
+            <div class="card" onclick="openModal('design27')" data-aos="fade-up">
+                <div class="card-img"><img src="design27_1.jpg" alt="Coin Mold"></div>
+                <div class="card-content"><h3>Commemorative Coin & Mold</h3><p>Tool & Die Design (UoVT).</p></div>
+            </div>
+            <div class="card" onclick="openModal('design28')" data-aos="fade-up">
+                <div class="card-img"><img src="design28_1.jpg" alt="3D Printer"></div>
+                <div class="card-content"><h3>Compact FDM 3D Printer</h3><p>Cantilever Mechatronic Design.</p></div>
+            </div>
+            <div class="card" onclick="openModal('design29')" data-aos="fade-up">
+                <div class="card-img"><img src="design29_1.jpg" alt="Tool Box"></div>
+                <div class="card-content"><h3>Heavy-Duty Tool Box</h3><p>Design for Injection Molding.</p></div>
+            </div>
+            <div class="card" onclick="openModal('design30')" data-aos="fade-up">
+                <div class="card-img"><img src="design30_1.jpg" alt="Pi Case"></div>
+                <div class="card-content"><h3>Raspberry Pi Enclosure</h3><p>Snap-Fit & Thermal Design.</p></div>
+            </div>
+
+        </div>
+    </section>
+
+    <footer>
+        <p>Copyright &copy; 2025. All Rights Reserved.</p>
+    </footer>
+
+    <div id="projectModal" class="modal">
+        <div class="modal-content">
+            <span class="close-btn" onclick="closeModal()">&times;</span>
+            <div class="slider-container">
+                <div class="slides" id="modalImages"></div>
+                <a class="prev" onclick="changeSlide(-1)">&#10094;</a>
+                <a class="next" onclick="changeSlide(1)">&#10095;</a>
+            </div>
+            <div class="modal-body">
+                <h2 id="modalTitle">Project Title</h2>
+                <div class="modal-desc" id="modalDesc"></div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+    <script>
+        AOS.init({ duration: 800, once: true });
+
+        // --- FULL PROJECT DATA (30 DESIGNS) ---
+        const projectsData = {
+            "design1": { title: "Heavy-Duty Off-Road Bull Bar", images: ["design1_1.jpg", "design1_2.jpg", "design1_3.jpg", "design1_4.jpg"], description: `<p>Robust frontal protection system modeled using <strong>SolidWorks Sheet Metal</strong>. Ensures accurate flat-pattern generation.</p><ul><li>Sheet Metal Modeling.</li><li>Winch & Fog Light Mounts.</li><li>Design for Manufacturing (DFM).</li></ul>` },
+            "design2": { title: "Ergonomic Automotive Center Console", images: ["design2_1.jpg", "design2_2.jpg", "design2_3.jpg", "design2_4.jpg"], description: `<p>Luxury console designed with <strong>SolidWorks Power Surfacing</strong> for Class-A surfaces and ergonomic driver reach.</p><ul><li>Power Surfacing.</li><li>Ergonomic Layout.</li><li>Class-A Surface Generation.</li></ul>` },
+            "design3": { title: "High-Performance Automotive Front Fascia", images: ["design3_1.jpg", "design3_2.jpg", "design3_3.jpg", "design3_4.jpg"], description: `<p>Stylized sports bumper designed using <strong>SolidWorks Power Surfacing</strong>. Merges sharp character lines with smooth aerodynamic transitions.</p><ul><li>Aerodynamic Optimization.</li><li>Organic Curve Integration.</li><li>Mold Release Analysis.</li></ul>` },
+            "design4": { title: "Aerodynamic Fog Light Housing for Bajaj RE", images: ["design4_1.jpg", "design4_2.jpg", "design4_3.jpg", "design4_4.jpg"], description: `<p>Custom auxiliary light mounting system using <strong>Power Surfacing</strong> to match the vehicle’s organic front curvature.</p><ul><li>Surface Modeling (G2 Continuity).</li><li>Seamless OEM Fitment.</li><li>Vibration Dampening.</li></ul>` },
+            "design5": { title: "Automated Bell Pepper Washing & Packing Line", images: ["design5_1.jpg", "design5_2.jpg", "design5_3.jpg", "design5_4.jpg"], description: `<p>Semi-automated agricultural processing line modeled in <strong>SolidWorks</strong>. Streamlines washing, sorting, and packing.</p><ul><li>Washing Tank & Conveyor System.</li><li>Agro-Industrial Automation.</li><li>Sensor-Based Crate Filling.</li></ul>` },
+            "design6": { title: "Automated T-Shirt Folding Mechanism", images: ["design6_1.jpg", "design6_2.jpg", "design6_3.jpg", "design6_4.jpg"], description: `<p>Semi-automated industrial machine using a precise <strong>electro-pneumatic mechanism</strong> for apparel manufacturing.</p><ul><li>Electro-Pneumatic Folding Plates.</li><li>Sensor-Triggered Automation.</li><li>Design for Assembly (DFA).</li></ul>` },
+            "design7": { title: "Modular Combat Robotics Arena", images: ["design7_1.jpg", "design7_2.jpg", "design7_3.jpg", "design7_4.jpg"], description: `<p>Heavy-duty combat arena engineered for high-intensity robotics competitions. Features impact-resistant polycarbonate paneling.</p><ul><li>High-Tensile Steel Frame.</li><li>Double-Layered Safety Barriers.</li><li>Modular Quick-Assembly Design.</li></ul>` },
+            "design8": { title: "Rugged Off-Road Front Bumper (Winch Integrated)", images: ["design8_1.jpg", "design8_2.jpg", "design8_3.jpg", "design8_4.jpg"], description: `<p>Specialized off-road protection system using a hybrid of <strong>Sheet Metal and Weldments</strong>. Optimized for approach angles.</p><ul><li>Hybrid Construction.</li><li>Integrated Winch Mount.</li><li>Impact Absorption Ribs.</li></ul>` },
+            "design9": { title: "Automated Tire Flash Trimming System", images: ["design9_1.jpg", "design9_2.jpg", "design9_3.jpg", "design9_4.jpg"], description: `<p>Industrial machine designed to automate the deflashing process in tire manufacturing using a <strong>pneumatically actuated cutting arm</strong>.</p><ul><li>Pneumatic Cutter & Rotary Drive.</li><li>Post-Molding Finishing.</li><li>Operator Safety Shielding.</li></ul>` },
+            "design10": { title: "Manual Material Handling Stacker", images: ["design10_1.jpg", "design10_2.jpg", "design10_3.jpg", "design10_4.jpg"], description: `<p>Cost-effective material handling solution modeled in <strong>SolidWorks</strong>. Focus on static load analysis and structural stability.</p><ul><li>Manual Hydraulic Stacker.</li><li>Structural Load Analysis.</li><li>Ergonomic Design.</li></ul>` },
+            "design11": { title: "Universal Wall-Mounted Charging Dock", images: ["design11_1.jpg", "design11_2.jpg", "design11_3.jpg", "design11_4.jpg"], description: `<p>Practical accessory optimized for <strong>Additive Manufacturing (DfAM)</strong>. Suspends securely from the wall charger.</p><ul><li>Optimized for FDM/SLA Printing.</li><li>Cable Management.</li><li>Reinforced Hanger Structure.</li></ul>` },
+            "design12": { title: "Industrial Sheet Metal Office Workstation", images: ["design12_1.jpg", "design12_2.jpg", "design12_3.jpg", "design12_4.jpg"], description: `<p>Modern office desk designed using <strong>SolidWorks Sheet Metal</strong>. Features a folded metal chassis for superior durability.</p><ul><li>CNC Brake Press Fabrication.</li><li>Integrated Metal Drawers.</li><li>Modern Industrial Aesthetic.</li></ul>` },
+            "design13": { title: "High-Performance Multi-Spoke Alloy Wheel", images: ["design13_1.jpg", "design13_2.jpg", "design13_3.jpg", "design13_4.jpg"], description: `<p>Stylized automotive rim designed to assist in <strong>brake heat dissipation</strong> through aerodynamic spoke geometry.</p><ul><li>Aerodynamic Spoke Design.</li><li>Brake Cooling Optimization.</li><li>Lightweight Alloy Concept.</li></ul>` },
+            "design14": { title: "Ergonomic Gaming Headset Stand (DfAM)", images: ["design14_1.jpg", "design14_2.jpg", "design14_3.jpg", "design14_4.jpg"], description: `<p>Desktop accessory engineered for <strong>3D Printing</strong>. Cantilevered arm with precise curvature to protect headset foam.</p><ul><li>Ergonomic Curvature.</li><li>Low Center of Gravity Base.</li><li>Support-Free Printing Design.</li></ul>` },
+            "design15": { title: "Industrial Steel Access Staircase (Weldments)", images: ["design15_1.jpg", "design15_2.jpg", "design15_3.jpg", "design15_4.jpg"], description: `<p>Heavy-duty access solution using <strong>SolidWorks Weldments</strong>. Optimized for high load-bearing capacity in factories.</p><ul><li>Structural Weldment Profiles.</li><li>Anti-Slip Diamond Plate.</li><li>Automated Cut List Generation.</li></ul>` },
+            "design16": { title: "Reciprocating Engine Assembly: Piston & Rod", images: ["design16_1.jpg", "design16_2.jpg", "design16_3.jpg", "design16_4.jpg"], description: `<p>Precision assembly of a combustion engine's core components. Uses <strong>Mechanical Mates</strong> to simulate reciprocating motion.</p><ul><li>Mechanical Motion Analysis.</li><li>Accurate Ring Groove Geometry.</li><li>Internal Combustion Dynamics.</li></ul>` },
+            "design17": { title: "Automotive V6 Engine Block (CAD & Drafting)", images: ["design17_1.jpg", "design17_2.jpg", "design17_3.jpg", "design17_4.jpg"], description: `<p>Structural foundation of a V6 engine including a complete <strong>2D Technical Drawing set</strong> for manufacturing.</p><ul><li>V6 Cylinder Configuration.</li><li>Detailed Manufacturing Drawings.</li><li>GD&T Standards.</li></ul>` },
+            "design18": { title: "Portable Power Bank Enclosure", images: ["design18_1.jpg", "design18_2.jpg", "design18_3.jpg", "design18_4.jpg"], description: `<p>Sleek enclosure for lithium-polymer batteries. Focuses on <strong>Consumer Electronics Packaging</strong> and injection molding fitment.</p><ul><li>Snap-Fit Assembly.</li><li>Injection Molding Design (DFM).</li><li>Precise I/O Integration.</li></ul>` },
+            "design19": { title: "Automotive Wire Harness Testing Fixture", images: ["design19_1.jpg", "design19_2.jpg", "design19_3.jpg", "design19_4.jpg"], description: `<p>Precision testing fixture designed at <strong>Accolade Engineering</strong>. Incorporates <strong>Poka-Yoke</strong> geometry.</p><ul><li>Wire Harness QA Tooling.</li><li>Poka-Yoke (Error Proofing).</li><li>Non-Conductive Material Design.</li></ul>` },
+            "design20": { title: "Custom Automotive Body Kit Bumper", images: ["design20_1.jpg", "design20_2.jpg", "design20_3.jpg", "design20_4.jpg"], description: `<p>Highly stylized aftermarket bumper modeled using <strong>SolidWorks Power Surfacing</strong>. Features an integrated aerodynamic splitter.</p><ul><li>Power Surfacing Design.</li><li>Aggressive Body Kit Styling.</li><li>Integrated Aerodynamics.</li></ul>` },
+            "design21": { title: "Futuristic Automotive Concept (Power Surfacing)", images: ["design21_1.jpg", "design21_2.jpg", "design21_3.jpg", "design21_4.jpg"], description: `<p>A visionary automotive design study utilizing <strong>Sub-D Modeling</strong> techniques to explore futuristic aesthetics.</p><ul><li>Power Surfacing (Freeform).</li><li>Conceptual Styling.</li><li>Aggressive Stance & Lines.</li></ul>` },
+            "design22": { title: "Performance Automotive Hood with Ram-Air", images: ["design22_1.jpg", "design22_2.jpg", "design22_3.jpg", "design22_4.jpg"], description: `<p>Stylized performance hood featuring an integrated <strong>Ram-Air Intake</strong>. Modeled for Class-A surface quality.</p><ul><li>Integrated Air Scoop.</li><li>Class-A Surface Finish.</li><li>Muscle Car Aesthetic.</li></ul>` },
+            "design23": { title: "Aerodynamic Side Mirror Housing", images: ["design23_1.jpg", "design23_2.jpg", "design23_3.jpg", "design23_4.jpg"], description: `<p>Retro-modern concept designed to minimize wind noise (Aeroacoustics). Features integrated camera mounts.</p><ul><li>Aeroacoustic Design.</li><li>G2-Curvature Continuity.</li><li>Integrated Tech Mounts.</li></ul>` },
+            "design24": { title: "Directional Turbine Alloy Wheel", images: ["design24_1.jpg", "design24_2.jpg", "design24_3.jpg", "design24_4.jpg"], description: `<p>Bold aftermarket rim with a <strong>directional turbine spoke architecture</strong> designed to extract hot air from brakes.</p><ul><li>Twisted Spoke Design.</li><li>Active Brake Cooling.</li><li>Simulated Multi-Piece Look.</li></ul>` },
+            "design25": { title: "IoT-Enabled Smart Security Lock", images: ["design25_1.jpg", "design25_2.jpg", "design25_3.jpg", "design25_4.jpg"], description: `<p>Mechatronic prototype integrating Arduino, GSM, and a <strong>servo-actuated mechanism</strong> for automated security.</p><ul><li>Embedded System Packaging.</li><li>Servo-Driven Deadbolt.</li><li>GSM/Mobile Connectivity.</li></ul>` },
+            "design26": { title: "Custom Residential Timber Cabinetry", images: ["design26_1.jpg", "design26_2.jpg", "design26_3.jpg", "design26_4.jpg"], description: `<p>Bespoke furniture unit modeled using <strong>SolidWorks Multi-body Parts</strong>. Capable of generating automatic cut-lists.</p><ul><li>Parametric Woodworking.</li><li>Multi-body Part Modeling.</li><li>Manufacturing Cut-List Ready.</li></ul>` },
+            "design27": { title: "Commemorative Coin & Die Casting Mold", images: ["design27_1.jpg", "design27_2.jpg", "design27_3.jpg", "design27_4.jpg"], description: `<p>Tooling project for <strong>UoVT</strong>. Includes the coin design and the negative mold cavity with precise draft angles.</p><ul><li>Tool & Die Design.</li><li>CNC Machining Optimized.</li><li>Draft Analysis for Ejection.</li></ul>` },
+            "design28": { title: "Compact Desktop FDM 3D Printer", images: ["design28_1.jpg", "design28_2.jpg", "design28_3.jpg", "design28_4.jpg"], description: `<p>Functional assembly of a cantilever-style 3D printer. Focuses on <strong>kinematics</strong> and structural rigidity.</p><ul><li>Cantilever Architecture.</li><li>NEMA Stepper Integration.</li><li>Mechatronic Assembly.</li></ul>` },
+            "design29": { title: "Heavy-Duty Portable Tool Storage", images: ["design29_1.jpg", "design29_2.jpg", "design29_3.jpg", "design29_4.jpg"], description: `<p>Ruggedized tool box designed for <strong>Injection Molding</strong>. Features structural ribbing for maximum stiffness.</p><ul><li>Injection Molding (DFM).</li><li>Structural Ribbing.</li><li>Draft & Wall Thickness Analysis.</li></ul>` },
+            "design30": { title: "Custom Raspberry Pi Enclosure", images: ["design30_1.jpg", "design30_2.jpg", "design30_3.jpg", "design30_4.jpg"], description: `<p>Protective case for Raspberry Pi featuring a tool-less <strong>snap-fit mechanism</strong> and passive ventilation.</p><ul><li>Screwless Snap-Fit Assembly.</li><li>Passive Thermal Management.</li><li>Precise I/O Port Alignment.</li></ul>` }
+        };
+
+        // --- Logic (Popup System) ---
+        let currentSlideIndex = 0;
+
+        function openModal(projectId) {
+            const modal = document.getElementById("projectModal");
+            const data = projectsData[projectId];
+            if (!data) return;
+
+            document.getElementById("modalTitle").innerText = data.title;
+            document.getElementById("modalDesc").innerHTML = data.description;
+
+            const imageContainer = document.getElementById("modalImages");
+            imageContainer.innerHTML = "";
+            
+            data.images.forEach((imgName, index) => {
+                let img = document.createElement("img");
+                img.src = imgName;
+                img.className = index === 0 ? "slide-img active" : "slide-img";
+                img.onerror = function() { this.style.display='none'; }; 
+                imageContainer.appendChild(img);
+            });
+
+            currentSlideIndex = 0;
+            modal.style.display = "block";
+            document.body.style.overflow = "hidden";
+        }
+
+        function closeModal() {
+            document.getElementById("projectModal").style.display = "none";
+            document.body.style.overflow = "auto";
+        }
+
+        function changeSlide(n) {
+            const images = document.getElementsByClassName("slide-img");
+            if (images.length === 0) return;
+            images[currentSlideIndex].classList.remove("active");
+            currentSlideIndex += n;
+            if (currentSlideIndex >= images.length) currentSlideIndex = 0;
+            if (currentSlideIndex < 0) currentSlideIndex = images.length - 1;
+            images[currentSlideIndex].classList.add("active");
+        }
+
+        window.onclick = function(event) {
+            if (event.target == document.getElementById("projectModal")) closeModal();
+        }
+    </script>
+</body>
+</html>

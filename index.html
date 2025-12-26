@@ -1,0 +1,823 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Professional Portfolio</title>
+    
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+
+    <style>
+        /* --- Color Palette (Professional Light Theme) --- */
+        :root {
+            --bg-color: #f8f9fa;      /* ඇසට පහසු මෘදු සුදු පාට */
+            --text-color: #333333;    /* තද අළු පාට අකුරු */
+            --primary-color: #0056b3; /* Professional Royal Blue */
+            --accent-color: #00a8cc;  /* Sky Blue for highlights */
+            --card-bg: #ffffff;       /* කාඩ්පත් සඳහා සුදු පාට */
+            --shadow: 0 5px 20px rgba(0,0,0,0.08); /* මෘදු සෙවනැලි */
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            margin: 0; padding: 0;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+
+        /* --- Navigation --- */
+        nav {
+            display: flex; justify-content: space-between; align-items: center; padding: 15px 5%;
+            background: #fff; box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+            position: sticky; top: 0; z-index: 1000;
+        }
+        .logo { font-size: 1.5rem; font-weight: 700; color: var(--primary-color); text-transform: uppercase; }
+        .logo span { color: var(--text-color); }
+        
+        nav ul { list-style: none; display: flex; gap: 25px; padding: 0; margin: 0; }
+        nav a { color: var(--text-color); text-decoration: none; font-weight: 600; transition: 0.3s; font-size: 0.95rem; }
+        nav a:hover { color: var(--primary-color); }
+
+        /* --- Hero Section (Banner) Updated --- */
+        .hero {
+            position: relative;
+            z-index: 1;
+            /* පැරණි 100vh වෙනුවට වඩාත් balanced ප්‍රමාණයක් */
+            min-height: 10vh; 
+            
+            /* ඔබගේ නව බැනර් පින්තූරය මෙතැනට යොදන්න */
+            background: url('new_banner.jpg') no-repeat center center/cover;
+            
+            /* අකුරු මැදට ගැනීමේ කෝඩ් (මේවා වෙනස් නොකරන්න) */
+            display: flex;
+            align-items: center; /* සිරස් අතට මැද කිරීම */
+            justify-content: center; /* තිරස් අතට මැද කිරීම */
+            text-align: center;
+            
+            /* උඩින් සහ යටින් පොඩි ඉඩක් තැබීම */
+            padding-top: 30px; 
+            padding-bottom: 30px;
+        }
+
+        /* පින්තූරය මතට අඳුරු ආවරණයක් (Overlay) දැමීම - අකුරු පැහැදිලිව පෙනීමට */
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            /* කළු පැහැති overlay එකේ ඝනකම අවශ්‍ය නම් මෙතනින් වෙනස් කරන්න (0.6 -> 0.7) */
+            background: rgba(0, 0, 0, 0.65); 
+            z-index: -1;
+        }
+
+        /* මැද ඇති අකුරු කොටස */
+        .hero-content {
+            position: relative; /* z-index වැඩ කිරීමට මෙය අනිවාර්ය වේ */
+            /* --- FIX එක මෙතනයි --- */
+            z-index: 10; /* මෙය Overlay එකට වඩා ඉහළ අගයක් විය යුතුය. එවිට අකුරු උඩට එයි. */
+            
+            text-align: center;
+            max-width: 800px; /* අකුරු පේළිය ඕනෑවට වඩා දිගු වීම වැළැක්වීමට */
+            padding: 20px;
+        }
+        
+        /* (අවශ්‍ය නම්) Hero title එකේ ප්‍රමාණය තරමක් අඩු කිරීම */
+        .hero-title {
+            font-size: 3.5rem; /* කලින් 4rem හෝ ඊට වැඩි නම් මෙය භාවිතා කරන්න */
+            margin-bottom: 15px;
+        }
+        
+        /* Buttons */
+        .btn {
+            padding: 12px 30px; border-radius: 5px; text-decoration: none; font-weight: 600; transition: 0.3s; display: inline-block;
+        }
+        .btn-primary { background: var(--primary-color); color: #fff; border: 2px solid var(--primary-color); }
+        .btn-primary:hover { background: transparent; color: var(--primary-color); }
+        
+        .btn-outline { border: 2px solid var(--primary-color); color: var(--primary-color); margin-left: 10px; }
+        .btn-outline:hover { background: var(--primary-color); color: #fff; }
+
+        /* --- Layout & Sections --- */
+        section { padding: 80px 8%; }
+        .section-title { text-align: center; font-size: 2.2rem; margin-bottom: 50px; color: #1a252f; }
+        .section-title span { color: var(--primary-color); border-bottom: 3px solid var(--accent-color); }
+
+        /* Grid Container Update */
+        .grid-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 30px;
+            padding: 20px;
+            justify-content: center; /* මෙය අලුතින් එකතු කරන්න - කාඩ් මැදට ගැනීමට */
+        }
+
+        /* --- About Section Layout (1/3 Image & 2/3 Text) --- */
+        .about-wrap {
+            display: flex;
+            align-items: center; /* පින්තූරය සහ වචන උස අතට මැද කරයි */
+            justify-content: center;
+            gap: 40px; /* කොටස් දෙක අතර පරතරය */
+            flex-wrap: wrap; /* කුඩා තිර සඳහා */
+        }
+
+        /* පින්තූරය සඳහා 1/3 (33.33%) ඉඩක් වෙන් කිරීම */
+        .about-img {
+            flex: 1; 
+            min-width: 300px; /* කුඩා වූ විට පමණක් මෙය ක්‍රියාත්මක වේ */
+            text-align: center; /* පින්තූරය එම කොටසේ මැදට ගනී */
+        }
+
+        /* පින්තූරයේ ප්‍රමාණය පාලනය කිරීම */
+        .about-img img {
+            width: 100%;
+            max-width: 350px; /* පින්තූරය ඕනෑවට වඩා ලොකු වීම වළක්වයි */
+            height: auto;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.15); /* Professional shadow */
+            display: inline-block; /* text-align center සමඟ වැඩ කිරීමට */
+        }
+
+        /* Bio එක සඳහා 2/3 (66.66%) ඉඩක් වෙන් කිරීම */
+        .about-text {
+            flex: 2;
+            min-width: 300px;
+        }
+        /* --- Card Design (Projects & Designs) --- */
+        .card {
+            background: var(--card-bg); border-radius: 10px; overflow: hidden;
+            box-shadow: var(--shadow); transition: transform 0.3s ease, box-shadow 0.3s ease;
+            border: 1px solid #eee;
+        }
+        .card:hover { transform: translateY(-8px); box-shadow: 0 15px 30px rgba(0,0,0,0.1); }
+        .card-img { height: 220px; overflow: hidden; }
+        .card-img img { width: 100%; height: 100%; object-fit: cover; transition: 0.5s; }
+        .card:hover .card-img img { transform: scale(1.05); }
+        .card-content { padding: 20px; }
+        .card h3 { margin: 0 0 10px; font-size: 1.25rem; color: #2c3e50; }
+        .card p { font-size: 0.9rem; color: #666; margin-bottom: 15px; }
+        
+        /* --- Fiverr Gigs Section (NEW) --- */
+        .fiverr-card {
+            text-align: center; padding: 30px; border-top: 4px solid #1dbf73; /* Fiverr Green */
+        }
+        .fiverr-icon { font-size: 3rem; color: #1dbf73; margin-bottom: 15px; }
+        .price-tag { 
+            display: inline-block; background: #e8f7f0; color: #1dbf73; 
+            padding: 5px 15px; border-radius: 20px; font-weight: bold; margin-bottom: 15px; 
+        }
+        .btn-fiverr {
+            background: #1dbf73; color: white; padding: 10px 25px; border-radius: 5px; 
+            text-decoration: none; display: inline-block; margin-top: 10px; font-weight: bold;
+        }
+        .btn-fiverr:hover { background: #159e5e; }
+
+        /* --- Footer --- */
+        footer { background: #1a252f; color: #fff; text-align: center; padding: 40px 0; margin-top: 50px; }
+        footer p { opacity: 0.7; }
+
+        /* --- Mobile Responsiveness --- */
+        @media (max-width: 768px) {
+            .hero h1 { font-size: 2.5rem; }
+            nav { flex-direction: column; padding: 20px; }
+            nav ul { margin-top: 15px; flex-wrap: wrap; justify-content: center; }
+            .about-wrap { flex-direction: column; }
+            section { padding: 50px 5%; }
+        }
+    /* --- Modal (Popup) Styles --- */
+.modal {
+    display: none; /* Hidden by default */
+    position: fixed; 
+    z-index: 2000; 
+    left: 0; top: 0;
+    width: 100%; height: 100%; 
+    background-color: rgba(0,0,0,0.85); /* Black background with opacity */
+    backdrop-filter: blur(5px);
+    overflow: auto; /* Enable scroll if needed */
+}
+
+.modal-content {
+    background-color: #fff;
+    margin: 2% auto; /* උඩින් සහ යටින් ඇති පරතරය අඩු කළා */
+    width: 85%;
+    max-width: 900px;
+    height: 90vh; /* තිරයෙන් 90% ක උසක් ගන්න */
+    border-radius: 10px;
+    position: relative;
+    animation: zoomIn 0.3s;
+    overflow: hidden; /* Scroll එක එලියට පනින එක නවත්වන්න */
+    
+    /* Flexbox එකතු කිරීම (මෙය මගින් පින්තූරය සහ අකුරු වෙන් කර තබයි) */
+    display: flex;
+    flex-direction: column; 
+}
+
+@keyframes zoomIn {
+    from {transform: scale(0.8); opacity: 0;}
+    to {transform: scale(1); opacity: 1;}
+}
+
+/* Close Button */
+.close-btn {
+    position: absolute; top: 15px; right: 25px;
+    color: #fff; font-size: 35px; font-weight: bold;
+    cursor: pointer; z-index: 100; text-shadow: 0 0 5px #000;
+}
+.close-btn:hover { color: var(--primary-color); }
+
+/* --- Image Slider --- */
+.slider-container {
+    position: relative;
+    width: 100%;
+    /* ස්ථිර උසක් (450px) වෙනුවට මෙය භාවිතා කරන්න: */
+    flex: 1; /* ඉතිරි ඉඩෙන් වැඩි කොටසක් පින්තූරයට */
+    min-height: 300px; /* අවම උසක් */
+    background: #000; /* පසුබිම කළු (හෝ ඔබට කැමති නම් #fff සුදු) */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+}
+.slide-img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain; /* පින්තූරය කිසිසේත් Crop නොවී සම්පූර්ණයෙන් පෙනෙන ලෙස සකසයි */
+    display: none;
+}
+.slide-img.active {
+    display: block;
+    animation: fade 0.5s;
+}
+.slide-img.active { display: block; animation: fade 0.5s; }
+
+@keyframes fade { from {opacity: .4} to {opacity: 1} }
+
+/* Next/Prev Buttons */
+.prev, .next {
+    cursor: pointer; position: absolute; top: 50%;
+    width: auto; padding: 16px; margin-top: -22px;
+    color: white; font-weight: bold; font-size: 25px;
+    transition: 0.6s ease; user-select: none;
+    background-color: rgba(0,0,0,0.3);
+    border-radius: 3px;
+}
+.next { right: 0; border-radius: 3px 0 0 3px; }
+.prev { left: 0; border-radius: 0 3px 3px 0; }
+.prev:hover, .next:hover { background-color: var(--primary-color); }
+
+/* --- Scrollable Description Area --- */
+.modal-body {
+    padding: 20px 25px;
+    background: #fff;
+    /* අකුරු කොටසට ස්ථිර ඉඩක් හෝ ඉතිරි ඉඩ ලබා දීම */
+    flex-shrink: 0; 
+    max-height: 40%; /* Popup එකෙන් 40% ක් උපරිම අකුරු වලට */
+    overflow-y: auto; /* අකුරු වැඩි නම් scroll වෙන්න */
+}
+/* Scrollbar Styling */
+.modal-desc::-webkit-scrollbar { width: 8px; }
+.modal-desc::-webkit-scrollbar-thumb { background: #ccc; border-radius: 4px; }
+
+/* Mobile Response */
+@media (max-width: 768px) {
+    .modal-content { width: 95%; margin: 10% auto; }
+    .slider-container { height: 250px; }
+}
+/* --- Fiverr Services Card Styling (Updated with Slider) --- */
+        .services-container {
+            display: flex; justify-content: center; gap: 30px;
+            flex-wrap: wrap; padding: 20px;
+        }
+
+        .service-card {
+            background: #fff; width: 320px;
+            border-radius: 10px; overflow: hidden; /* පින්තූරය කොටුවෙන් එළියට නොයන්න */
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            transition: 0.3s; border: 1px solid #e0e0e0;
+            display: flex; flex-direction: column;
+        }
+
+        .service-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 30px rgba(0,0,0,0.2);
+            border-color: #1dbf73;
+        }
+
+        /* Slider Area */
+        .gig-slider {
+            width: 100%; height: 200px;
+            position: relative; overflow: hidden;
+            background: #f0f0f0;
+        }
+
+/* --- Fiverr Slider CSS (Fixed) --- */
+        .gig-slider {
+            position: relative;
+            width: 100%;
+            height: 200px; /* Slider එකේ උස */
+            overflow: hidden;
+            background: #000; /* පින්තූර නැති වුනොත් කළු පාට පෙනේවි */
+            border-radius: 10px 10px 0 0;
+        }
+
+        .gig-slider img {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            opacity: 0; /* සාමාන්‍යයෙන් පින්තූර නොපෙනී තියෙන්න */
+            transition: opacity 1s ease-in-out; /* Smooth Fade Effect */
+            z-index: 1;
+        }
+
+        /* Active Class එක ලැබුනම පින්තූරය පේන්න ගන්නවා */
+        .gig-slider img.active {
+            opacity: 1;
+            z-index: 10;
+        }
+
+        /* Content Area */
+        .service-content { padding: 20px; text-align: center; flex: 1; display: flex; flex-direction: column; justify-content: space-between; }
+        
+        .service-content h3 { font-size: 1.25rem; margin-bottom: 10px; color: #333; }
+        .service-content p { font-size: 0.95rem; color: #666; margin-bottom: 20px; line-height: 1.5; }
+
+        .fiverr-btn {
+            display: block; background-color: #1dbf73; color: white;
+            padding: 10px 0; border-radius: 5px; text-decoration: none;
+            font-weight: bold; transition: 0.3s; width: 100%;
+        }
+        .fiverr-btn:hover { background-color: #19a463; }
+
+/* --- Hero Text Color Fix (අකුරු සුදු කිරීම) --- */
+        
+        /* ප්‍රධාන මාතෘකාව (Name/Title) සුදු කිරීම */
+        .hero-title, 
+        .hero-content h1 {
+            color: #ffffff !important; /* අනිවාර්යයෙන්ම සුදු පාට (Pure White) */
+            text-shadow: 2px 2px 8px rgba(0,0,0,0.7); /* අකුරු වටේට කළු සෙවනැල්ලක් (Shadow) */
+        }
+
+        /* විස්තරය (Description/Paragraph) සුදු කිරීම */
+        .hero-content p {
+            color: #f0f0f0 !important; /* ඉතා ලා සුදු පාටක් */
+            text-shadow: 1px 1px 5px rgba(0,0,0,0.8); /* කියවන්න ලේසි වෙන්න Shadow එකක් */
+            font-weight: 500; /* අකුරු ටිකක් මහත (Bold) කිරීම */
+        }
+
+        /* නමේ කොටසක් පාට කරලා තිබුනා නම් (Span), ඒක එහෙමම තියන්න */
+        .hero-content span {
+            /* මෙතනට ඔයාගේ Brand Color එක එයි (උදා: නිල් හෝ තැඹිලි) */
+            /* පාට වෙනස් වෙන්න ඕනි නෑ, ඒක හයිලයිට් වෙලා පේන්න ඕනි නිසා */
+            text-shadow: 0px 0px 10px rgba(0,0,0,0.5);
+        }
+    </style>
+</head>
+<body>
+
+<nav>
+        <div class="logo">Dilshan<span>.jaya</span></div>
+        <ul>
+            <li><a href="#home">Home</a></li>
+            <li><a href="#about">About</a></li>
+            <li><a href="#designs">Designs</a></li>
+            <li><a href="#projects">Projects</a></li>
+            <li><a href="#fiverr">Services</a></li> </ul>
+    </nav>
+
+    <section id="home" class="hero">
+        <div class="hero-content" data-aos="fade-up">
+            <h1>DILSHAN JAYASOORIYA</h1>
+            <p>MECHATRONICS ENGINEER | 3D DESIGNER | INNOVATOR</p>
+            <div style="margin-top: 20px;">
+                <a href="#projects" class="btn btn-primary">View Projects</a>
+                <a href="#contact" class="btn btn-outline">Contact Me</a>
+            </div>
+        </div>
+    </section>
+
+<section id="about">
+        <div class="about-wrap">
+            
+            <div class="about-img" data-aos="fade-right">
+                <img src="me.jpg" alt="Dilshan Jayasooriya">
+            </div>
+
+            <div class="about-text" data-aos="fade-left">
+                <h2 style="color:var(--primary-color); margin-top:0; font-size: 2.5rem;">Hello, I'm Dilshan Jayasooriya</h2>
+                
+                <p style="text-align: justify; margin-bottom: 20px; font-size: 1.05rem;">
+                    I am an aspiring Engineering professional currently reading for my final year of the <strong>B.Tech (Hons) in Mechatronics Technology</strong> degree at the <strong>University of Vocational Technology (UoVT)</strong>. My academic journey has built a disciplined foundation for solving complex engineering challenges with precision.
+                </p>
+
+                <p style="text-align: justify; margin-bottom: 20px; font-size: 1.05rem;">
+                    My core expertise lies in <strong>Advanced 3D Parametric Modeling</strong> and <strong>Mechanical Design</strong>, uniquely underpinned by a strong <strong>Mechatronics Engineering</strong> perspective. I blend mechanical precision with an understanding of electronic integration and control dynamics. This multidisciplinary approach ensures that every design I create—using tools like <strong>SolidWorks</strong> and <strong>AutoCAD</strong>—is not just a static model, but a functional component optimized for modern automation.
+                </p>
+
+                <p style="text-align: justify; font-size: 1.05rem;">
+                    Staying ahead of the technology curve, I actively apply <strong>AI Literacy</strong> to my engineering workflow, utilizing modern AI tools to optimize design processes and enhance problem-solving efficiency. Additionally, I engage in  <strong>freelance 3D design work</strong>, delivering professional digital models that turn client concepts into reality.
+                </p>
+
+                <div style="margin-top: 30px; display:flex; gap:20px;">
+                    <a href="https://www.linkedin.com/" target="_blank" style="font-size:1.8rem; color:#0077b5; transition:0.3s;"><i class="fab fa-linkedin"></i></a>
+                    <a href="https://github.com/" target="_blank" style="font-size:1.8rem; color:#333; transition:0.3s;"><i class="fab fa-github"></i></a>
+                    <a href="#fiverr" style="font-size:1.8rem; color:#1dbf73; transition:0.3s;"><i class="fas fa-briefcase"></i></a> 
+                </div>
+            </div>
+
+        </div>
+    </section>
+
+    <section id="designs" style="background-color: #f1f4f8;">
+        <h2 class="section-title">Featured <span>Designs</span></h2>
+        <div class="grid-container">
+            <div class="card"onclick="openModal('design1')" data-aos="zoom-in">
+                <div class="card-img"><img src="design1_1.jpg" alt="Design 1"></div>
+                <div class="card-content">
+                    <h3>Heavy-Duty Off-Road Bull Bar</h3>
+                    <p>SolidWorks Sheet Metal Design.</p>
+                </div>
+            </div>
+            <div class="card"onclick="openModal('design2')" data-aos="zoom-in" data-aos-delay="100">
+                <div class="card-img"><img src="design2_1.jpg" alt="Design 2"></div>
+                <div class="card-content">
+                    <h3>Ergonomic Automotive Center Console</h3>
+                    <p>SolidWorks Power Surfacing.</p>
+                </div>
+            </div>
+            <div class="card"onclick="openModal('design3')" data-aos="zoom-in" data-aos-delay="200">
+                <div class="card-img"><img src="design3_1.jpg" alt="Design 3"></div>
+                <div class="card-content">
+                    <h3>High-Performance Automotive Front Fascia</h3>
+                    <p>SolidWorks Power Surfacing.</p>
+                </div>
+            </div>
+        </div>
+        <div style="text-align:center; margin-top:40px;">
+            <a href="designs.html" class="btn btn-primary">See All Designs <i class="fas fa-arrow-right"></i></a>
+        </div>
+    </section>
+
+<section id="projects" style="background-color: #f1f4f8;">
+        <h2 class="section-title">Engineering <span>Projects</span></h2>
+        <div class="grid-container">
+            
+            <div class="card" onclick="openModal('project1')" data-aos="fade-up">
+                <div class="card-img"><img src="project1.jpg" alt="E-Bike System"></div>
+                <div class="card-content">
+                    <h3>E-Bike Tire Optimization System</h3>
+                    <p>Laboratory Test Rig for Rolling Resistance.</p>
+                </div>
+            </div>
+
+            <div class="card" onclick="openModal('project2')" data-aos="fade-up" data-aos-delay="100">
+                <div class="card-img"><img src="project2.jpg" alt="Spider Robot"></div>
+                <div class="card-content">
+                    <h3>Spider Robot (Theo Jansen)</h3>
+                    <p>Bio-inspired multi-legged walking robot.</p>
+                </div>
+            </div>
+
+             <div class="card" onclick="openModal('project3')" data-aos="fade-up" data-aos-delay="200">
+                <div class="card-img"><img src="project3.jpg" alt="Battle Robot"></div>
+                <div class="card-content">
+                    <h3>Combat Battle Robot</h3>
+                    <p>High-performance inter-university combat bot.</p>
+                </div>
+            </div>
+
+            <div class="card" onclick="openModal('project4')" data-aos="fade-up" data-aos-delay="300">
+    <div class="card-img"><img src="project4.jpg" alt="Conveyor System"></div>
+    <div class="card-content">
+        <h3>Industrial Conveyor System</h3>
+        <p>Automated assembly line solution.</p>
+    </div>
+</div>
+
+        </div>
+    </section>
+
+   <section id="fiverr" style="background-color: #fff;">
+        <h2 class="section-title">My <span>Fiverr Services</span></h2>
+        
+        <div class="services-container">
+            
+            <div class="service-card" data-aos="fade-up">
+                <div class="gig-slider">
+                    <img src="gig1_1.jpg" class="active" alt="Gig 1 Image">
+                    <img src="gig1_2.jpg" alt="Gig 1 Image">
+                    <img src="gig1_3.jpg" alt="Gig 1 Image">
+                </div>
+                <div class="service-content">
+                    <h3>I will design 3d cad models for 3d printing prototyping manufacturing</h3>
+                    <p>Professional 3D modeling and realistic renderings using SolidWorks.</p>
+                    <a href="https://www.fiverr.com/s/GzZvoxZ" target="_blank" class="fiverr-btn">Order Now</a>
+                </div>
+            </div>
+
+            <div class="service-card" data-aos="fade-up" data-aos-delay="100">
+                <div class="gig-slider">
+                    <img src="gig2_1.jpg" class="active" alt="Gig 2 Image">
+                    <img src="gig2_2.jpg" alt="Gig 2 Image">
+                    <img src="gig2_3.jpg" alt="Gig 2 Image">
+                </div>
+                <div class="service-content">
+                    <h3>I will design cad models from your 2d drawings, sketches or ideas</h3>
+                    <p>Detailed 3D designs for manufacturing and concept visualization.</p>
+                    <a href="https://www.fiverr.com/s/GzZvoR2" target="_blank" class="fiverr-btn">Order Now</a>
+                </div>
+            </div>
+
+            <div class="service-card" data-aos="fade-up" data-aos-delay="200">
+                <div class="gig-slider">
+                    <img src="gig3_1.jpg" class="active" alt="Gig 3 Image">
+                    <img src="gig3_2.jpg" alt="Gig 3 Image">
+                    <img src="gig3_3.jpg" alt="Gig 3 Image">
+                </div>
+                <div class="service-content">
+                    <h3>I will design any 3d model with solidworks</h3>
+                    <p>High-precision mechanical assemblies and industrial part design.</p>
+                    <a href="https://www.fiverr.com/s/YRqP6pq" target="_blank" class="fiverr-btn">Order Now</a>
+                </div>
+            </div>
+
+        </div>
+    </section>
+
+<section id="contact">
+        <h2 class="section-title">Get In <span>Touch</span></h2>
+        <div style="text-align: center; font-size: 1.2rem; color: #555;">
+            
+            <p style="margin-bottom: 15px;">
+                <a href="mailto:dilshan.jayasooriya99@gmail.com" style="text-decoration: none; color: #555; transition: 0.3s; display: inline-flex; align-items: center; gap: 10px;" onmouseover="this.style.color='#0056b3'" onmouseout="this.style.color='#555'">
+                    <i class="fas fa-envelope" style="color:var(--primary-color); font-size: 1.5rem;"></i> 
+                    dilshan.jayasooriya99@gmail.com
+                </a>
+            </p>
+
+            <p>
+                <a href="tel:+94702616016" style="text-decoration: none; color: #555; transition: 0.3s; display: inline-flex; align-items: center; gap: 10px;" onmouseover="this.style.color='#0056b3'" onmouseout="this.style.color='#555'">
+                    <i class="fas fa-phone" style="color:var(--primary-color); font-size: 1.5rem;"></i> 
+                    070 261 6016
+                </a>
+            </p>
+
+            <div style="margin-top: 40px; display: flex; justify-content: center; gap: 25px;">
+                
+                <a href="https://www.facebook.com/chamindu.dilshan.520?mibextid=dGKdO6" target="_blank" style="text-decoration: none;">
+                    <i class="fab fa-facebook" style="font-size: 2.5rem; color: #555; transition: 0.3s;" 
+                       onmouseover="this.style.color='#1877F2'; this.style.transform='scale(1.2)'" 
+                       onmouseout="this.style.color='#555'; this.style.transform='scale(1)'"></i>
+                </a>
+
+                <a href="https://www.linkedin.com/in/dilshan-jayasooriya-9b518b278?utm_source=share&utm_campaign=share_via&utm_content=profile&utm_medium=ios_app" target="_blank" style="text-decoration: none;">
+                    <i class="fab fa-linkedin" style="font-size: 2.5rem; color: #555; transition: 0.3s;" 
+                       onmouseover="this.style.color='#0077b5'; this.style.transform='scale(1.2)'" 
+                       onmouseout="this.style.color='#555'; this.style.transform='scale(1)'"></i>
+                </a>
+
+                <a href="https://wa.me/+94702616016" target="_blank" style="text-decoration: none;">
+                    <i class="fab fa-whatsapp-square" style="font-size: 2.5rem; color: #555; transition: 0.3s;" 
+                       onmouseover="this.style.color='#25D366'; this.style.transform='scale(1.2)'" 
+                       onmouseout="this.style.color='#555'; this.style.transform='scale(1)'"></i>
+                </a>
+
+            </div>
+
+        </div>
+    </section>    
+
+    <footer>
+        <p>Copyright &copy; 2025. All Rights Reserved.</p>
+    </footer>
+
+<div id="projectModal" class="modal">
+    <div class="modal-content">
+        <span class="close-btn" onclick="closeModal()">&times;</span>
+        
+        <div class="slider-container">
+            <div class="slides" id="modalImages">
+                </div>
+            
+            <a class="prev" onclick="changeSlide(-1)">&#10094;</a>
+            <a class="next" onclick="changeSlide(1)">&#10095;</a>
+        </div>
+
+        <div class="modal-body">
+            <h2 id="modalTitle">Project Title</h2>
+            <div class="modal-desc" id="modalDesc">
+                </div>
+        </div>
+    </div>
+</div>
+
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+    <script> AOS.init({ duration: 800, once: true }); </script>
+
+<script>
+        // --- Project Data (All Designs & Projects) ---
+        const projectsData = {
+            // --- DESIGNS ---
+            "design1": {
+                title: "Heavy-Duty Off-Road Bull Bar (Sheet Metal Design)",
+                images: ["design1_1.jpg", "design1_2.jpg", "design1_3.jpg"], 
+                description: `
+                    <p>This project features a robust frontal protection system designed for extreme off-road environments. Modeled exclusively using <strong>SolidWorks Sheet Metal</strong> functions, the design ensures accurate flat-pattern generation for CNC laser cutting.</p>
+                    <p><strong>Engineering Insight:</strong> Serves as the primary defense mechanism against animal strikes and terrain obstacles, protecting vital components like the radiator. Also improves the vehicle's approach angle.</p>
+                    <ul>
+                        <li>Advanced Sheet Metal Modeling (Edge Flanges, Miter Flanges).</li>
+                        <li>Integrated Mounts for Winch & LED Fog Lights.</li>
+                        <li>Design for Manufacturing (DFM).</li>
+                    </ul>`
+            },
+            "design2": {
+                title: "Ergonomic Automotive Center Console (Power Surfacing)",
+                images: ["design2_1.jpg", "design2_2.jpg"], 
+                description: `
+                    <p>A luxury automotive center console designed with a focus on organic curvature using <strong>SolidWorks Power Surfacing</strong>. This allowed for the creation of smooth, Class-A surfaces.</p>
+                    <p><strong>Engineering Insight:</strong> Developed considering driver reach zones and ergonomics, bridging the gap between artistic modeling and mechanical engineering.</p>
+                    <ul>
+                        <li>Advanced Organic Modeling using Power Surfacing.</li>
+                        <li>Ergonomic Control Layout.</li>
+                        <li>Class-A Surface Generation.</li>
+                    </ul>`
+            },
+            "design3": {
+                title: "High-Performance Automotive Front Fascia",
+                images: ["design3_1.jpg", "design3_2.jpg"], 
+                description: `
+                    <p>A stylized, high-performance front bumper designed for a modern sports coupe using <strong>SolidWorks Power Surfacing</strong>. Merges sharp character lines with smooth aerodynamic transitions.</p>
+                    <p><strong>Engineering Insight:</strong> Integrates functional air intakes for cooling and a splitter for downforce. Designed with mold release angles for manufacturing.</p>
+                    <ul>
+                        <li>Aerodynamic Optimization.</li>
+                        <li>Seamless Integration of Sharp Edges and Organic Curves.</li>
+                        <li>Designed for Efficient Airflow Management.</li>
+                    </ul>`
+            },
+
+            // --- PROJECTS ---
+            "project1": {
+                title: "E-Bike Tire Pressure Optimization System",
+                images: ["project1.jpg", "project1_1.jpg", "project1_2.jpg", "project1_3.jpg", "project1_4.jpg"], 
+                description: `
+                    <p>Research project to design a laboratory testing machine for determining optimum E-Bike tire pressure to minimize <strong>Rolling Resistance</strong>.</p>
+                    <p><strong>Engineering Insight:</strong> Uses a <strong>Raspberry Pi 4</strong> control architecture with <strong>Delta AC Servo Motors</strong> and <strong>Load Cells</strong> to simulate real-world rider weights and road friction.</p>
+                    <ul>
+                        <li><strong>Control:</strong> Raspberry Pi 4 (Python GUI).</li>
+                        <li><strong>Sensing:</strong> S-Type Load Cells with HX711.</li>
+                        <li><strong>Actuation:</strong> Servo-driven Ball Screw Mechanism.</li>
+                    </ul>`
+            },
+            "project2": {
+                title: "Bio-Inspired Eight-Legged Spider Robot",
+                images: ["project2.jpg", "project2_1.jpg", "project2_2.jpg", "project2_3.jpg", "project2_4.jpg"], 
+                description: `
+                    <p>An automated multi-legged robot using the <strong>Theo Jansen Linkage</strong> mechanism to navigate rough terrains like mine shafts and pipes.</p>
+                    <p><strong>Engineering Insight:</strong> Constructed with <strong>2mm steel plates</strong> and driven by dual DC Gear Motors for differential steering. Equipped with gas sensors and action cameras for hazardous environments.</p>
+                    <ul>
+                        <li><strong>Mechanism:</strong> Theo Jansen Linkage.</li>
+                        <li><strong>Body:</strong> Rugged Steel Chassis.</li>
+                        <li><strong>Features:</strong> Remote Surveillance & Gas Detection.</li>
+                    </ul>`
+            },
+            "project3": {
+                title: "High-Performance Combat Robot",
+                images: ["project3.jpg", "project3_1.jpg"], 
+                description: `
+                    <p>A competitive combat robot designed for <strong>Inter-University Robotics Battles</strong>. Balances structural integrity, agility, and offensive power.</p>
+                    <p><strong>Engineering Insight:</strong> Impact-resistant chassis protects high-discharge LiPo batteries. High-torque DC motors with custom gear reduction ensure rapid acceleration and tactical dominance.</p>
+                    <ul>
+                        <li><strong>Design:</strong> Shock-absorbing Chassis.</li>
+                        <li><strong>Drive:</strong> High-Torque Differential Drive.</li>
+                        <li><strong>Power:</strong> High-Current Motor Drivers.</li>
+                    </ul>`
+            },
+    // Project 4 (Accolade Engineering Internship Project)
+            "project4": {
+                title: "Industrial Elliptical Conveyor System (Automated Assembly Line)",
+                images: ["project4.jpg", "project4_1.jpg", "project4_2.jpg", "project4_3.jpg"], 
+                description: `
+                    <p>
+                        Designed and developed during my tenure as an <strong>NPD Intern at Accolade Engineering</strong>. This project addresses efficiency bottlenecks in automotive wire harness manufacturing by replacing manual transfer methods with an automated elliptical conveyor system.
+                    </p>
+                    <p>
+                        <strong>Engineering Insight:</strong> The system is engineered to transport <strong>8 heavy-duty assembly boards</strong> (approx. 800kg total load) simultaneously using a single motor driven chain-drive mechanism. The design minimizes cycle time by moving the product to the operator, controlled via a <strong>PLC system</strong> that synchronizes movement with worker completion signals.
+                    </p>
+                    <br>
+                    <strong>Key Features:</strong>
+                    <ul>
+                        <li><strong>Mechanism:</strong> Chain-Driven Elliptical Path System.</li>
+                        <li><strong>Capacity:</strong> Heavy-duty structure supporting ~800kg Load.</li>
+                        <li><strong>Tools Used:</strong> SolidWorks for Design & Simulation.</li>
+                        <li><strong>Optimization:</strong> Eliminates manual handling time between processes.</li>
+                    </ul>`
+            }
+        };
+
+        // --- Logic (Do not change this part) ---
+        let currentSlideIndex = 0;
+
+        function openModal(projectId) {
+            const modal = document.getElementById("projectModal");
+            const data = projectsData[projectId];
+
+            if (!data) {
+                console.error("Project data not found for:", projectId);
+                return; 
+            }
+
+            // Set Title & Description
+            document.getElementById("modalTitle").innerText = data.title;
+            document.getElementById("modalDesc").innerHTML = data.description;
+
+            // Set Images
+            const imageContainer = document.getElementById("modalImages");
+            imageContainer.innerHTML = ""; 
+            
+            data.images.forEach((imgName, index) => {
+                let img = document.createElement("img");
+                img.src = imgName;
+                img.className = index === 0 ? "slide-img active" : "slide-img";
+                // Error handling for images
+                img.onerror = function() { this.style.display='none'; console.log("Image not found:", imgName); };
+                imageContainer.appendChild(img);
+            });
+
+            currentSlideIndex = 0; 
+            modal.style.display = "block";
+            document.body.style.overflow = "hidden"; 
+        }
+
+        function closeModal() {
+            document.getElementById("projectModal").style.display = "none";
+            document.body.style.overflow = "auto"; 
+        }
+
+        function changeSlide(n) {
+            const images = document.getElementsByClassName("slide-img");
+            if (images.length === 0) return;
+
+            images[currentSlideIndex].classList.remove("active");
+            currentSlideIndex += n;
+            
+            if (currentSlideIndex >= images.length) currentSlideIndex = 0;
+            if (currentSlideIndex < 0) currentSlideIndex = images.length - 1;
+            
+            images[currentSlideIndex].classList.add("active");
+        }
+
+        // Close when clicking outside
+        window.onclick = function(event) {
+            const modal = document.getElementById("projectModal");
+            if (event.target == modal) {
+                closeModal();
+            }    
+}
+    </script>
+
+<script>
+    // --- Fiverr Auto Slider (Standalone Script) ---
+    document.addEventListener("DOMContentLoaded", function() {
+        // හැම Slider එකක්ම තෝරාගන්න
+        const sliders = document.querySelectorAll(".gig-slider");
+        
+        sliders.forEach(function(slider) {
+            const images = slider.querySelectorAll("img");
+            
+            // පින්තූර තිබේ නම් පමණක් ක්‍රියාත්මක වේ
+            if (images.length > 0) {
+                
+                // ආරක්ෂාවට: පළමු පින්තූරයට active class එක දාමු (HTML වල නැත්නම්)
+                images[0].classList.add("active");
+                
+                let currentIndex = 0;
+                
+                // තත්පර 3කට වරක් මාරු වේ
+                setInterval(function() {
+                    // 1. දැනට පේන පින්තූරය හංගන්න
+                    images[currentIndex].classList.remove("active");
+                    
+                    // 2. ඊළඟ පින්තූරයේ අංකය ගන්න
+                    currentIndex++;
+                    
+                    // අන්තිම පින්තූරයට ආවාම ආයේ මුලට යන්න
+                    if (currentIndex >= images.length) {
+                        currentIndex = 0;
+                    }
+                    
+                    // 3. අලුත් පින්තූරය පෙන්නන්න
+                    images[currentIndex].classList.add("active");
+                    
+                }, 3000); // 3000ms = 3 Seconds
+            }
+        });
+    });
+</script>
+
+</body>
+</html>
